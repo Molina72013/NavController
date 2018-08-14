@@ -25,9 +25,9 @@
     [super viewWillAppear:animated];
     
     if ([self.title isEqualToString:@"Apple mobile devices"]) {
-        self.products = @[@"iPad", @"iPod Touch",@"iPhone"];
+        self.products = @[@"iPad", @"iPod Touch",@"iPhone",@"iMac",@"Macbook Pro",@"iWatch"];
     } else {
-        self.products = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab"];
+        self.products = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab",@"Galaxy Watch",@"Galaxy Book",@"Galaxy Book"];
     }
     [self.tableView reloadData];
 }
