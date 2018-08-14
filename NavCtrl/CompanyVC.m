@@ -16,6 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self initCompanyLogo];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     
@@ -73,6 +74,8 @@
     
     cell.textLabel.text = [self.companyList objectAtIndex:[indexPath row]];
     
+    
+    cell.imageView.image = [_companyLogos objectAtIndex:indexPath.row];
     return cell;
 }
 
@@ -140,6 +143,17 @@
     
 }
 
+-(id) initCompanyLogo
+{
+    UIImage* appleLogo = [UIImage imageNamed:@"applelogo"];
+    UIImage* samsungLogo = [UIImage imageNamed:@"samsunglogo"];
+    UIImage* blackBerryLogo = [UIImage imageNamed:@"blackberrylogo"];
+    UIImage* windowsLogo = [UIImage imageNamed:@"windowslogo"];
+
+    self.companyLogos = @[appleLogo, samsungLogo, blackBerryLogo, windowsLogo];
+    
+    return self;
+}
 
 /*
 #pragma mark - Navigation

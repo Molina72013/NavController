@@ -24,6 +24,9 @@
     
     [super viewWillAppear:animated];
     
+    
+    
+    
     if ([self.title isEqualToString:@"Apple mobile devices"]) {
         self.products = @[@"iPad", @"iPod Touch",@"iPhone"];
     } else if ([self.title isEqualToString:@"Samsung mobile devices"]) {
@@ -126,6 +129,9 @@
  }
  
  */
+
+
+
 
 
 - (void)dealloc {
