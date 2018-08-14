@@ -25,9 +25,13 @@
     [super viewWillAppear:animated];
     
     if ([self.title isEqualToString:@"Apple mobile devices"]) {
-        self.products = @[@"iPad", @"iPod Touch",@"iPhone",@"iMac",@"Macbook Pro",@"iWatch"];
+        self.products = @[@"iPad", @"iPod Touch",@"iPhone"];
+    } else if ([self.title isEqualToString:@"Samsung mobile devices"]) {
+        self.products = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab"];
+    } else if ([self.title isEqualToString:@"BlackBerry mobile devices"]) {
+        self.products = @[@"BlackBerry Leap", @"BlackBerry Passport ", @"BlackBerry Z4"];
     } else {
-        self.products = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab",@"Galaxy Watch",@"Galaxy Book",@"Galaxy Book"];
+        self.products = @[@"Dell Venue Pro", @"HTC 7 Pro", @"LG Optimus 7"];
     }
     [self.tableView reloadData];
 }
