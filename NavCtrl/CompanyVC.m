@@ -24,7 +24,8 @@
     self.navigationItem.rightBarButtonItem = editButton;
     
     
-    self.companyList = @[@"Apple mobile devices",@"Samsung mobile devices",@"BlackBerry mobile devices",@"Windows mobile devices"];
+    
+    [self initCompanies];
     self.title = @"Mobile device makers";
     // Do any additional setup after loading the view from its nib.
 }
@@ -37,6 +38,7 @@
     } else {
         [self.tableView setEditing:YES animated:NO];
         self.navigationItem.rightBarButtonItem.title = @"Done";
+
     }
     
 }
@@ -79,6 +81,31 @@
     return cell;
 }
 
+
+//ADD DELETING VERB
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.companyList removeObjectAtIndex:indexPath.row];//or something similar to this based on your data source array structure
+        //remove the corresponding object from your data source array before this or else you will get a crash
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+
+
+
+//HIDE THE SWIPING DELETE
+- (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Detemine if it's in editing mode
+    if (self.tableView.editing)
+    {
+        return UITableViewCellEditingStyleDelete;
+    }
+    
+    return UITableViewCellEditingStyleNone;
+}
 
 /*
  // Override to support conditional editing of the table view.
@@ -157,6 +184,19 @@
     [self.companyLogos addObject:blackBerryLogo];
     [self.companyLogos addObject:windowsLogo];
     
+    return self;
+}
+
+
+-(id) initCompanies
+{
+    //self.companyList = @[@"Apple mobile devices",@"Samsung mobile devices",@"BlackBerry mobile devices",@"Windows mobile devices"];
+    self.companyList = [NSMutableArray array];
+    [_companyList addObject:@"Apple mobile devices"];
+    [_companyList addObject:@"Samsung mobile devices"];
+    [_companyList addObject:@"BlackBerry mobile devices"];
+    [_companyList addObject:@"Windows mobile devices"];
+
     return self;
 }
 

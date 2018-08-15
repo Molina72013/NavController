@@ -8,6 +8,7 @@
 
 #import "ProductVC.h"
 
+
 @interface ProductVC ()
 
 @end
@@ -16,8 +17,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditMode)];
+    self.navigationItem.rightBarButtonItem = editButton;
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)toggleEditMode {
+    
+    if (self.tableView.editing) {
+        [self.tableView setEditing:NO animated:YES];
+        self.navigationItem.rightBarButtonItem.title = @"Edit";
+    } else {
+        [self.tableView setEditing:YES animated:NO];
+        self.navigationItem.rightBarButtonItem.title = @"Done";
+        
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -28,17 +42,17 @@
     
     
     if ([self.title isEqualToString:@"Apple mobile devices"]) {
-        self.products = @[@"iPad", @"iPod Touch",@"iPhone"];
+        [self initProdcuts:@"apple"];
         [self initProductLogo:@"apple"];
         [self getUrlForProducts:@"apple"];
     } else if ([self.title isEqualToString:@"Samsung mobile devices"]) {
-        self.products = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab"];
+        [self initProdcuts:@"samsung"];
         [self initProductLogo:@"samsung"];
         [self getUrlForProducts:@"samsung"];
     } else if ([self.title isEqualToString:@"BlackBerry mobile devices"]) {
-        self.products = @[@"BlackBerry Leap", @"BlackBerry Passport ", @"BlackBerry Z4"];
+        [self initProdcuts:@"blackberry"];
     } else {
-        self.products = @[@"Dell Venue Pro", @"HTC 7 Pro", @"LG Optimus 7"];
+        [self initProdcuts:@"windows"];
     }
     [self.tableView reloadData];
 }
@@ -80,6 +94,34 @@
 
     return cell;
 }
+//ADD DELETING VERB
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.products removeObjectAtIndex:indexPath.row];//or something similar to this based on your data source array structure
+        //remove the corresponding object from your data source array before this or else you will get a crash
+        //Everthing is being controlled through indexPath
+        [self.productURLS removeObjectAtIndex:indexPath.row];
+        [self.logoPicuture removeObjectAtIndex: indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+
+
+
+//HIDE THE SWIPING DELETE
+- (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Detemine if it's in editing mode
+    if (self.tableView.editing)
+    {
+        return UITableViewCellEditingStyleDelete;
+    }
+
+    return UITableViewCellEditingStyleNone;
+}
+
 
 /*
  // Override to support conditional editing of the table view.
@@ -136,7 +178,30 @@
 
 }
  
- 
+-(id) initProdcuts:(NSString*)s
+{
+    
+    NSArray* apple = @[@"iPad", @"iPod Touch",@"iPhone"];
+    NSArray* samsung = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab"];
+    NSArray* blackBerry = @[@"BlackBerry Leap", @"BlackBerry Passport ", @"BlackBerry Z4"];
+    NSArray* windows = @[@"Dell Venue Pro", @"HTC 7 Pro", @"LG Optimus 7"];
+    
+    if([s isEqualToString:@"apple"])
+    {
+        self.products = [[NSMutableArray alloc] initWithArray:apple];
+    } else if([s isEqualToString:@"samsung"])
+    {
+        self.products = [[NSMutableArray alloc] initWithArray:samsung];
+    } else if([s isEqualToString:@"blackberry"])
+    {
+        self.products = [[NSMutableArray alloc] initWithArray:blackBerry];
+    } else if([s isEqualToString:@"windos"])
+    {
+        self.products = [[NSMutableArray alloc] initWithArray:windows];
+    }
+
+    return self;
+}
 
 
 -(id) getUrlForProducts:(NSString*)s
