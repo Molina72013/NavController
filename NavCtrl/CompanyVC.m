@@ -150,7 +150,12 @@
     UIImage* blackBerryLogo = [UIImage imageNamed:@"blackberrylogo"];
     UIImage* windowsLogo = [UIImage imageNamed:@"windowslogo"];
 
-    self.companyLogos = @[appleLogo, samsungLogo, blackBerryLogo, windowsLogo];
+    self.companyLogos = [[NSMutableArray alloc] init];
+    
+    [self.companyLogos addObject: appleLogo];
+    [self.companyLogos addObject: samsungLogo];
+    [self.companyLogos addObject:blackBerryLogo];
+    [self.companyLogos addObject:windowsLogo];
     
     return self;
 }
