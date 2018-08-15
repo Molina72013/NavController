@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		402232D321249CE90007D12E /* WKWebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 402232D221249CE90007D12E /* WKWebViewVC.m */; };
+		402232D521249D020007D12E /* WKWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 402232D421249D020007D12E /* WKWebView.xib */; };
+		402232D721249D530007D12E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 402232D621249D530007D12E /* WebKit.framework */; };
 		48A656B518163BF200746D36 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B418163BF200746D36 /* Foundation.framework */; };
 		48A656B718163BF200746D36 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B618163BF200746D36 /* CoreGraphics.framework */; };
 		48A656B918163BF200746D36 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B818163BF200746D36 /* UIKit.framework */; };
@@ -38,6 +41,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		402232D121249CE90007D12E /* WKWebViewVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKWebViewVC.h; sourceTree = "<group>"; };
+		402232D221249CE90007D12E /* WKWebViewVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebViewVC.m; sourceTree = "<group>"; };
+		402232D421249D020007D12E /* WKWebView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WKWebView.xib; sourceTree = "<group>"; };
+		402232D621249D530007D12E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		48A656B118163BF200746D36 /* NavCtrl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavCtrl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A656B418163BF200746D36 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		48A656B618163BF200746D36 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -69,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				402232D721249D530007D12E /* WebKit.framework in Frameworks */,
 				48A656B718163BF200746D36 /* CoreGraphics.framework in Frameworks */,
 				48A656B918163BF200746D36 /* UIKit.framework in Frameworks */,
 				48A656B518163BF200746D36 /* Foundation.framework in Frameworks */,
@@ -88,6 +96,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		402232D021249CCB0007D12E /* WKWebView */ = {
+			isa = PBXGroup;
+			children = (
+				402232D121249CE90007D12E /* WKWebViewVC.h */,
+				402232D221249CE90007D12E /* WKWebViewVC.m */,
+				402232D421249D020007D12E /* WKWebView.xib */,
+			);
+			name = WKWebView;
+			sourceTree = "<group>";
+		};
 		483796CB1BCBF7A00062D5AB /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +157,7 @@
 		48A656B318163BF200746D36 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				402232D621249D530007D12E /* WebKit.framework */,
 				48A656B418163BF200746D36 /* Foundation.framework */,
 				48A656B618163BF200746D36 /* CoreGraphics.framework */,
 				48A656B818163BF200746D36 /* UIKit.framework */,
@@ -150,6 +169,7 @@
 		48A656BA18163BF200746D36 /* NavCtrl */ = {
 			isa = PBXGroup;
 			children = (
+				402232D021249CCB0007D12E /* WKWebView */,
 				483796CB1BCBF7A00062D5AB /* AppDelegate */,
 				483796CC1BCBF7C70062D5AB /* ParentViewController */,
 				483796CD1BCBF7EB0062D5AB /* ProductViewController */,
@@ -267,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E62FF291E4A3982002D55B8 /* Launch Screen.storyboard in Resources */,
+				402232D521249D020007D12E /* WKWebView.xib in Resources */,
 				48A656EE1816468000746D36 /* Sunflower.gif in Resources */,
 				9E62FF221E4A33DC002D55B8 /* CompanyVC.xib in Resources */,
 				9E62FF271E4A33F1002D55B8 /* ProductVC.xib in Resources */,
@@ -293,6 +314,7 @@
 				9E62FF211E4A33DC002D55B8 /* CompanyVC.m in Sources */,
 				48A656C518163BF200746D36 /* NavControllerAppDelegate.m in Sources */,
 				48A656C118163BF200746D36 /* main.m in Sources */,
+				402232D321249CE90007D12E /* WKWebViewVC.m in Sources */,
 				9E62FF261E4A33F1002D55B8 /* ProductVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

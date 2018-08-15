@@ -7,10 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WKWebViewVC.h"
+
 
 @interface ProductVC : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@property (nonatomic, retain) WKWebViewVC* wkwebViewController;
 
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) NSArray *products;
+@property (nonatomic, retain) NSMutableArray* productURLS;
+@property (nonatomic, retain) NSMutableArray* logoPicuture;
+
 
 @end

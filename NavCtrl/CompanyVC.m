@@ -73,9 +73,9 @@
     // Configure the cell...
     
     cell.textLabel.text = [self.companyList objectAtIndex:[indexPath row]];
-    
-    
     cell.imageView.image = [_companyLogos objectAtIndex:indexPath.row];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
     return cell;
 }
 
