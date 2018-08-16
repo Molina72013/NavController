@@ -17,4 +17,11 @@
 @property (nonatomic, retain) NSMutableArray* companyLogos;
 
 
+
+
+
+
+
+
+
 @end

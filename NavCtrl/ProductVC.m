@@ -20,6 +20,32 @@
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditMode)];
     self.navigationItem.rightBarButtonItem = editButton;
     // Do any additional setup after loading the view from its nib.
+    
+//    if ([self.title isEqualToString:@"Apple mobile devices"]) {
+//        [self initProdcuts:@"apple"];
+//        [self initProductLogo:@"apple"];
+//        [self getUrlForProducts:@"apple"];
+//    } else if ([self.title isEqualToString:@"Samsung mobile devices"]) {
+//        [self initProdcuts:@"samsung"];
+//        [self initProductLogo:@"samsung"];
+//        [self getUrlForProducts:@"samsung"];
+//    } else if ([self.title isEqualToString:@"BlackBerry mobile devices"]) {
+//        [self initProdcuts:@"blackberry"];
+//    } else {
+//        [self initProdcuts:@"windows"];
+//    }
+    self.productDictionary = [[NSMutableDictionary alloc] init];
+    self.products = [NSMutableArray array];
+    self.productURLS = [NSMutableArray array];
+    self.logoPicuture = [NSMutableArray array];
+    
+    
+    
+    [self initAppleProdcuts];
+    [self initSamsungProdcuts];
+    [self initBlackBerryProdcuts];
+    [self initWindowsProdcuts];
+    
 }
 
 - (void)toggleEditMode {
@@ -39,24 +65,41 @@
     [super viewWillAppear:animated];
     
     
+   // NSMutableDictionary* currDict = [[NSMutableDictionary alloc] init];
+     NSMutableDictionary* currDict = [_productDictionary objectForKey:_currentKeyProduct];
+    
+    self.products = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company products"]];
+    self.logoPicuture = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company logos"]];
+    self.productURLS = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company urls"]];
     
     
-    if ([self.title isEqualToString:@"Apple mobile devices"]) {
-        [self initProdcuts:@"apple"];
-        [self initProductLogo:@"apple"];
-        [self getUrlForProducts:@"apple"];
-    } else if ([self.title isEqualToString:@"Samsung mobile devices"]) {
-        [self initProdcuts:@"samsung"];
-        [self initProductLogo:@"samsung"];
-        [self getUrlForProducts:@"samsung"];
-    } else if ([self.title isEqualToString:@"BlackBerry mobile devices"]) {
-        [self initProdcuts:@"blackberry"];
-    } else {
-        [self initProdcuts:@"windows"];
-    }
     [self.tableView reloadData];
+
+    
 }
 
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
+    //Manipulate your data array.
+    NSString* currenObj = [_products objectAtIndex:fromIndexPath.row];
+    UIImage* currobcImg = [_logoPicuture objectAtIndex:fromIndexPath.row];
+    NSString* currObjURL = [_productURLS objectAtIndex:fromIndexPath.row];
+   
+    [_products removeObjectAtIndex:fromIndexPath.row];
+    [_products insertObject:currenObj atIndex:toIndexPath.row];
+    
+    [_logoPicuture removeObjectAtIndex:fromIndexPath.row];
+    [_logoPicuture insertObject:currobcImg atIndex:toIndexPath.row];
+    
+    [_productURLS removeObjectAtIndex:fromIndexPath.row];
+    [_productURLS insertObject:currObjURL atIndex:toIndexPath.row];
+
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -98,11 +141,23 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.products removeObjectAtIndex:indexPath.row];//or something similar to this based on your data source array structure
-        //remove the corresponding object from your data source array before this or else you will get a crash
-        //Everthing is being controlled through indexPath
-        [self.productURLS removeObjectAtIndex:indexPath.row];
+      //  [self.productDictionary removeObjectForKey:_currentKeyProduct];
+        //        [self.productURLS removeObjectAtIndex:indexPath.row];
+//        [self.logoPicuture removeObjectAtIndex: indexPath.row];
+
+        [self.products removeObjectAtIndex: indexPath.row];
         [self.logoPicuture removeObjectAtIndex: indexPath.row];
+        [self.productURLS removeObjectAtIndex: indexPath.row];
+        
+        NSDictionary*  prodcutDict = @{@"company products": self.products,
+                                       @"company logos": self.logoPicuture,
+                                       @"company urls": self.productURLS,
+                                       };
+        
+        NSMutableDictionary *products = [[NSMutableDictionary alloc] initWithDictionary:prodcutDict];
+        
+        [self.productDictionary setObject:products forKey:_currentKeyProduct];
+
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
@@ -265,6 +320,145 @@
     }
     return self;
 
+}
+
+-(id) initAppleProdcuts
+{
+    //self.appleDict = [[NSMutableDictionary alloc] init];
+    
+    NSArray* appleProcuts = @[@"iPad", @"iPod Touch",@"iPhone"]; //1
+
+    
+    UIImage* ipadPic = [UIImage imageNamed:@"ipadicon"];
+    UIImage* ipodPic = [UIImage imageNamed:@"ipodicon"];
+    UIImage* iphonePic = [UIImage imageNamed:@"iphoneicon"];
+    
+    NSArray* appleLogos = @[ipadPic, ipodPic, iphonePic];
+
+    
+    NSString* ipadUrl = @"https://www.apple.com/ipad/";
+    NSString* ipodTouchUrl = @"https://www.apple.com/ipod-touch/";
+    NSString* iphoneURL = @"https://www.apple.com/iphone/";
+    
+    NSArray* productURLS = @[ipadUrl, ipodTouchUrl, iphoneURL];
+
+    
+     NSDictionary*  prodcutDict = @{@"company products": appleProcuts,
+                    @"company logos": appleLogos,
+                    @"company urls": productURLS,
+                    };
+    
+    
+    
+    //[self.appleDict addEntriesFromDictionary:prodcutDict];
+    
+    
+    
+    NSMutableDictionary *products = [[NSMutableDictionary alloc] initWithDictionary:prodcutDict];
+    
+    [self.productDictionary setObject:products forKey:@"Apple mobile devices"];
+
+    
+    [products release];
+    
+    
+    return self;
+}
+-(id) initSamsungProdcuts
+{
+    //self.appleDict = [[NSMutableDictionary alloc] init];
+    NSArray* samsungProcuts = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab"]; //1
+    
+    
+    UIImage* galaxySPic = [UIImage imageNamed:@"galaxysicon"];
+    UIImage* galaxyNotePic = [UIImage imageNamed:@"galaxynoteicon"];
+    UIImage* galaxyTab = [UIImage imageNamed:@"galaxytabicon"];
+    
+    NSArray* samsungLogos = @[galaxySPic, galaxyNotePic, galaxyTab];
+    
+    
+    NSString* galaxyS4Url = @"https://www.samsung.com/my/smartphones/galaxy-s/";
+    NSString* galaxyNoteUrl = @"https://www.samsung.com/us/mobile/galaxy-note9/";
+    NSString* galaxyTabURL = @"https://www.samsung.com/us/mobile/tablets/";
+    
+    
+    NSArray* productURLS = @[galaxyS4Url, galaxyNoteUrl, galaxyTabURL];
+    
+    
+    NSDictionary*  prodcutDict = @{@"company products": samsungProcuts,
+                                   @"company logos": samsungLogos,
+                                   @"company urls": productURLS,
+                                   };
+    
+    
+    
+    //[self.appleDict addEntriesFromDictionary:prodcutDict];
+    
+    
+    
+    NSMutableDictionary *products = [[NSMutableDictionary alloc] initWithDictionary:prodcutDict];
+    
+    [self.productDictionary setObject:products forKey:@"Samsung mobile devices"];
+    
+    
+    [products release];
+    
+    
+    return self;
+}
+
+-(id) initBlackBerryProdcuts
+{
+    //self.appleDict = [[NSMutableDictionary alloc] init];
+    
+    NSArray* blackBerryProducts = @[@"BlackBerry Leap", @"BlackBerry Passport ", @"BlackBerry Z4"];
+
+
+    
+    
+    NSDictionary*  prodcutDict = @{@"company products": blackBerryProducts};
+    
+    
+    
+    //[self.appleDict addEntriesFromDictionary:prodcutDict];
+    
+    
+    
+    NSMutableDictionary *products = [[NSMutableDictionary alloc] initWithDictionary:prodcutDict];
+    
+    [self.productDictionary setObject:products forKey:@"BlackBerry mobile devices"];
+    
+    
+    [products release];
+    
+    return self;
+}
+
+-(id) initWindowsProdcuts
+{
+    //self.appleDict = [[NSMutableDictionary alloc] init];
+    
+    NSArray* windowsProdcuts = @[@"Dell Venue Pro", @"HTC 7 Pro", @"LG Optimus 7"];
+
+    
+    
+    
+    NSDictionary*  prodcutDict = @{@"company products": windowsProdcuts};
+    
+    
+    
+    //[self.appleDict addEntriesFromDictionary:prodcutDict];
+    
+    
+    
+    NSMutableDictionary *products = [[NSMutableDictionary alloc] initWithDictionary:prodcutDict];
+    
+    [self.productDictionary setObject:products forKey:@"Windows mobile devices"];
+    
+    
+    [products release];
+    
+    return self;
 }
 
 - (void)dealloc {

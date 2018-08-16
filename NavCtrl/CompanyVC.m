@@ -153,21 +153,49 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    self.productViewController = [[ProductVC alloc]init];
-    if (indexPath.row == 0){
-        self.productViewController.title = @"Apple mobile devices";
-    } else if (indexPath.row == 1){
-        self.productViewController.title = @"Samsung mobile devices";
-    } else if (indexPath.row == 2){
-        self.productViewController.title = @"BlackBerry mobile devices";
-    } else {
-        self.productViewController.title = @"Windows mobile devices";
+    if(self.productViewController==nil){
+        self.productViewController = [[ProductVC alloc]init];
     }
+    
+    
+    
+//    if (indexPath.row == 0){
+//        self.productViewController.title = @"Apple mobile devices";
+//    } else if (indexPath.row == 1){
+//        self.productViewController.title = @"Samsung mobile devices";
+//    } else if (indexPath.row == 2){
+//        self.productViewController.title = @"BlackBerry mobile devices";
+//    } else {
+//        self.productViewController.title = @"Windows mobile devices";
+//    }
+    
+    self.productViewController.title = [self.companyList objectAtIndex:[indexPath row]];
+    self.productViewController.currentKeyProduct = [self.companyList objectAtIndex:[indexPath row]];
     
     [self.navigationController
      pushViewController:self.productViewController
      animated:YES];
     
+   // [tableView reloadData];
+    
+}
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
+    //Manipulate your data array.
+    NSString* currenObj = [_companyList objectAtIndex:fromIndexPath.row];
+    UIImage* currobcImg = [_companyLogos objectAtIndex:fromIndexPath.row];
+    
+    [_companyList removeObjectAtIndex:fromIndexPath.row];
+    [_companyList insertObject:currenObj atIndex:toIndexPath.row];
+    
+    [_companyLogos removeObjectAtIndex:fromIndexPath.row];
+    [_companyLogos insertObject:currobcImg atIndex:toIndexPath.row];
+               
+               
 }
 
 -(id) initCompanyLogo
@@ -199,6 +227,11 @@
 
     return self;
 }
+
+
+
+
+
 
 /*
 #pragma mark - Navigation

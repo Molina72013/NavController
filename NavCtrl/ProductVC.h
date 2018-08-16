@@ -19,4 +19,11 @@
 @property (nonatomic, retain) NSMutableArray* logoPicuture;
 
 
+@property (nonatomic, retain) NSString* currentKeyProduct;
+@property (nonatomic, retain) NSMutableDictionary* productDictionary;
+
+
+
+
+
 @end
