@@ -7,6 +7,8 @@
 //
 
 #import "ProductVC.h"
+#import "Companies.h"
+#import "Products.h"
 
 
 @interface ProductVC ()
@@ -19,6 +21,9 @@
     [super viewDidLoad];
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditMode)];
     self.navigationItem.rightBarButtonItem = editButton;
+    
+    
+    self.products = [NSArray array];
     // Do any additional setup after loading the view from its nib.
     
 //    if ([self.title isEqualToString:@"Apple mobile devices"]) {
@@ -34,17 +39,22 @@
 //    } else {
 //        [self initProdcuts:@"windows"];
 //    }
-    self.productDictionary = [[NSMutableDictionary alloc] init];
-    self.products = [NSMutableArray array];
-    self.productURLS = [NSMutableArray array];
-    self.logoPicuture = [NSMutableArray array];
+   // self.productDictionary = [[NSMutableDictionary alloc] init];
+   
+    
+    //self.products = [[NSMutableArray alloc] initWithArray:[_productDictionary objectForKey:@"company products"]];
+   // self.products = [NSMutableArray array];
+
+//    self.logoPicuture = [NSMutableArray array];
+    
+//
+//
+//    [self initAppleProdcuts];
+//    [self initSamsungProdcuts];
+//    [self initBlackBerryProdcuts];
+//    [self initWindowsProdcuts];
     
     
-    
-    [self initAppleProdcuts];
-    [self initSamsungProdcuts];
-    [self initBlackBerryProdcuts];
-    [self initWindowsProdcuts];
     
 }
 
@@ -64,14 +74,16 @@
     
     [super viewWillAppear:animated];
     
+    [self refreshProductList];
+
     
    // NSMutableDictionary* currDict = [[NSMutableDictionary alloc] init];
-     NSMutableDictionary* currDict = [_productDictionary objectForKey:_currentKeyProduct];
-    
-    self.products = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company products"]];
-    self.logoPicuture = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company logos"]];
-    self.productURLS = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company urls"]];
-    
+//     NSMutableDictionary* currDict = [_productDictionary objectForKey:_currentKeyProduct];
+//
+//    self.products = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company products"]];
+//    self.logoPicuture = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company logos"]];
+//    self.productURLS = [NSMutableArray arrayWithArray:[currDict objectForKey:@"company urls"]];
+//
     
     [self.tableView reloadData];
 
@@ -86,18 +98,15 @@
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
     //Manipulate your data array.
-    NSString* currenObj = [_products objectAtIndex:fromIndexPath.row];
-    UIImage* currobcImg = [_logoPicuture objectAtIndex:fromIndexPath.row];
-    NSString* currObjURL = [_productURLS objectAtIndex:fromIndexPath.row];
-   
-    [_products removeObjectAtIndex:fromIndexPath.row];
-    [_products insertObject:currenObj atIndex:toIndexPath.row];
+
     
-    [_logoPicuture removeObjectAtIndex:fromIndexPath.row];
-    [_logoPicuture insertObject:currobcImg atIndex:toIndexPath.row];
+    Products* chosenProudct = [self.products objectAtIndex:fromIndexPath.row];
     
-    [_productURLS removeObjectAtIndex:fromIndexPath.row];
-    [_productURLS insertObject:currObjURL atIndex:toIndexPath.row];
+    
+    [Companies.theCompanies moveProduct:chosenProudct company:_currentCompany toIndex:toIndexPath.row];
+    [self refreshProductList];
+    
+    
 
 }
 
@@ -130,34 +139,24 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     // Configure the cell...
-    cell.textLabel.text = [self.products objectAtIndex:[indexPath row]];
-    
-    
-    cell.imageView.image = [_logoPicuture objectAtIndex:indexPath.row];
+   
+    Products* product = [self.products objectAtIndex:indexPath.row];
 
+    cell.textLabel.text = product.productName;
+    cell.imageView.image = [UIImage imageNamed:product.productLogo];
+ 
     return cell;
 }
 //ADD DELETING VERB
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-      //  [self.productDictionary removeObjectForKey:_currentKeyProduct];
-        //        [self.productURLS removeObjectAtIndex:indexPath.row];
-//        [self.logoPicuture removeObjectAtIndex: indexPath.row];
-
-        [self.products removeObjectAtIndex: indexPath.row];
-        [self.logoPicuture removeObjectAtIndex: indexPath.row];
-        [self.productURLS removeObjectAtIndex: indexPath.row];
         
-        NSDictionary*  prodcutDict = @{@"company products": self.products,
-                                       @"company logos": self.logoPicuture,
-                                       @"company urls": self.productURLS,
-                                       };
+        Products* chosenProduct = [self.products objectAtIndex:indexPath.row];
         
-        NSMutableDictionary *products = [[NSMutableDictionary alloc] initWithDictionary:prodcutDict];
+        [Companies.theCompanies deleteProduct:chosenProduct company:_currentCompany];
         
-        [self.productDictionary setObject:products forKey:_currentKeyProduct];
-
+        [self refreshProductList];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
@@ -225,7 +224,10 @@
  {
 
      self.wkwebViewController = [[WKWebViewVC alloc] init];
-     self.wkwebViewController.productURL = [_productURLS objectAtIndex:indexPath.row];
+     
+     Products* currProduct = [self.products objectAtIndex:indexPath.row];
+     
+     self.wkwebViewController.productURL = currProduct.productURL;
      
      [self.navigationController
       pushViewController:self.wkwebViewController
@@ -459,6 +461,14 @@
     [products release];
     
     return self;
+}
+
+-(void) refreshProductList
+{
+    self.products = [Companies.theCompanies getAllProducts:_currentCompany];
+    
+
+
 }
 
 - (void)dealloc {

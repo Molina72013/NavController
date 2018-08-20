@@ -7,7 +7,8 @@
 //
 
 #import "CompanyVC.h"
-
+#import "Companies.h"
+#import "Companies.h"
 @interface CompanyVC ()
 
 @end
@@ -16,18 +17,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initCompanyLogo];
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    
+   // [self refreshCompanyList];
+
+    //Bar Button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditMode)];
-    self.navigationItem.rightBarButtonItem = editButton;
-    
-    
-    
-    [self initCompanies];
+    self.navigationItem.leftBarButtonItem = editButton;
     self.title = @"Mobile device makers";
-    // Do any additional setup after loading the view from its nib.
+    
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:true];
+    [self refreshCompanyList];
+    
 }
 
 - (void)toggleEditMode {
@@ -72,10 +76,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell...
+
+    Company *company = [self.companyList objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [self.companyList objectAtIndex:[indexPath row]];
-    cell.imageView.image = [_companyLogos objectAtIndex:indexPath.row];
+    cell.textLabel.text = company.companyName;
+    cell.imageView.image = [UIImage imageNamed:company.companyLogoName];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     return cell;
@@ -86,7 +91,13 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.companyList removeObjectAtIndex:indexPath.row];//or something similar to this based on your data source array structure
+        
+        Company* selectedCompany = [self.companyList objectAtIndex:indexPath.row];
+       
+        [Companies.theCompanies deleteCompany:selectedCompany];
+        [self refreshCompanyList];
+       
+        
         //remove the corresponding object from your data source array before this or else you will get a crash
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -155,28 +166,18 @@
     
     if(self.productViewController==nil){
         self.productViewController = [[ProductVC alloc]init];
+       // self.productViewController.currentCompany = [[Company alloc] init];
     }
     
     
+    Company* currCompany = [self.companyList objectAtIndex:indexPath.row];
     
-//    if (indexPath.row == 0){
-//        self.productViewController.title = @"Apple mobile devices";
-//    } else if (indexPath.row == 1){
-//        self.productViewController.title = @"Samsung mobile devices";
-//    } else if (indexPath.row == 2){
-//        self.productViewController.title = @"BlackBerry mobile devices";
-//    } else {
-//        self.productViewController.title = @"Windows mobile devices";
-//    }
-    
-    self.productViewController.title = [self.companyList objectAtIndex:[indexPath row]];
-    self.productViewController.currentKeyProduct = [self.companyList objectAtIndex:[indexPath row]];
+    self.productViewController.title = currCompany.companyName;
+    self.productViewController.currentCompany = currCompany;
     
     [self.navigationController
      pushViewController:self.productViewController
      animated:YES];
-    
-   // [tableView reloadData];
     
 }
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -186,16 +187,11 @@
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
     //Manipulate your data array.
-    NSString* currenObj = [_companyList objectAtIndex:fromIndexPath.row];
-    UIImage* currobcImg = [_companyLogos objectAtIndex:fromIndexPath.row];
+    Company* movingCompany = [self.companyList objectAtIndex:fromIndexPath.row];
     
-    [_companyList removeObjectAtIndex:fromIndexPath.row];
-    [_companyList insertObject:currenObj atIndex:toIndexPath.row];
+    [Companies.theCompanies moveCompany:movingCompany toIndex:toIndexPath.row];
+    [self refreshCompanyList];
     
-    [_companyLogos removeObjectAtIndex:fromIndexPath.row];
-    [_companyLogos insertObject:currobcImg atIndex:toIndexPath.row];
-               
-               
 }
 
 -(id) initCompanyLogo
@@ -218,18 +214,21 @@
 
 -(id) initCompanies
 {
-    //self.companyList = @[@"Apple mobile devices",@"Samsung mobile devices",@"BlackBerry mobile devices",@"Windows mobile devices"];
-    self.companyList = [NSMutableArray array];
-    [_companyList addObject:@"Apple mobile devices"];
-    [_companyList addObject:@"Samsung mobile devices"];
-    [_companyList addObject:@"BlackBerry mobile devices"];
-    [_companyList addObject:@"Windows mobile devices"];
+//    //self.companyList = @[@"Apple mobile devices",@"Samsung mobile devices",@"BlackBerry mobile devices",@"Windows mobile devices"];
+//    self.companyList = [NSMutableArray array];
+//    [_companyList addObject:@"Apple mobile devices"];
+//    [_companyList addObject:@"Samsung mobile devices"];
+//    [_companyList addObject:@"BlackBerry mobile devices"];
+//    [_companyList addObject:@"Windows mobile devices"];
 
     return self;
 }
 
 
-
+-(void) refreshCompanyList
+{
+    self.companyList = [Companies.theCompanies getAllCompanies];
+}
 
 
 
