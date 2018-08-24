@@ -18,11 +18,17 @@
     CompanyVC *rootController = [[CompanyVC alloc]init];
     self.navigationController = [[UINavigationController alloc]
                             initWithRootViewController:rootController];
-    
+
     self.window = [[UIWindow alloc]
                    initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:self.navigationController];
     [self.window makeKeyAndVisible];
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:125.0/255.0 green:181.0/255.0 blue:6.0/255.0 alpha:1.0];
+    self.navigationController.navigationBar.tintColor = UIColor.whiteColor;
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                  NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:20]
+                                                                    };
+
     return YES;
     
     

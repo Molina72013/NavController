@@ -13,19 +13,13 @@
 @interface Company : NSObject
 
 @property (nonatomic, retain) NSString *companyName;
-@property (nonatomic, retain) NSString* companyLogoName;
-
-
--(instancetype)initWithName: (NSString*) name andLogo:(NSString*) logo;
-
-
-
-
+@property (nonatomic, retain) NSString* companyLogoURL;
+@property (nonatomic, retain) NSString* companyAPI;
+@property (nonatomic) float companyAPIValue;
 
 @property (nonatomic, retain) NSMutableArray<Products *> *companyProducts;
-//@property (nonatomic, retain) NSMutableDictionary* companysEntireInfo;
-//-(void) addProducts:(NSString*)n i:(NSString*)i u:(NSString*)u;
 
+-(instancetype)initWithName: (NSString*) name api:(NSString*)api andLogo:(NSString*) logo;
 
 
 

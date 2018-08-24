@@ -7,9 +7,9 @@
 //
 
 #import "CompanyVC.h"
-#import "Companies.h"
-#import "Companies.h"
-@interface CompanyVC ()
+
+
+@interface CompanyVC () <UIUpdateDelegate>
 
 @end
 
@@ -21,9 +21,31 @@
 
     //Bar Button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditMode)];
+    UIBarButtonItem *plusButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(plusButtonHit)];
+
+    self.navigationItem.rightBarButtonItem = plusButton;
     self.navigationItem.leftBarButtonItem = editButton;
-    self.title = @"Mobile device makers";
+    self.title = @"Watch List";
+
+
+
+
     
+    
+}
+
+-(void) plusButtonHit
+{
+    
+    if(self.creationViewController==nil){
+        self.creationViewController = [[CreationAndEditionVC alloc]init];
+    }
+    
+    
+    self.creationViewController.currCompany = nil;
+    [self.navigationController
+     pushViewController:self.creationViewController
+     animated:YES];
     
 }
 
@@ -31,7 +53,15 @@
 {
     [super viewWillAppear:true];
     [self refreshCompanyList];
+     [self.tableView setEditing:NO animated:YES];
     
+    Companies.theCompanies.viewControllerDelegate = self;
+    [Companies.theCompanies getAllApi];
+    
+    [_tableView reloadData];
+
+
+
 }
 
 - (void)toggleEditMode {
@@ -42,6 +72,8 @@
     } else {
         [self.tableView setEditing:YES animated:NO];
         self.navigationItem.rightBarButtonItem.title = @"Done";
+        _tableView.allowsSelectionDuringEditing = true;
+
 
     }
     
@@ -72,26 +104,33 @@
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
 
     Company *company = [self.companyList objectAtIndex:indexPath.row];
-    
-    cell.textLabel.text = company.companyName;
-    cell.imageView.image = [UIImage imageNamed:company.companyLogoName];
+    [cell.textLabel setFont:[UIFont systemFontOfSize:24]];
+    [cell.detailTextLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)",company.companyName, company.companyAPI];
+    cell.detailTextLabel.textColor  = [[UIColor blackColor] colorWithAlphaComponent:0.75f];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f",company.companyAPIValue];
+    cell.imageView.image = [UIImage imageNamed:company.companyLogoURL];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     return cell;
 }
 
-
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
+}
 //ADD DELETING VERB
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
+        //tableView.allowsSelection = true;
         Company* selectedCompany = [self.companyList objectAtIndex:indexPath.row];
        
         [Companies.theCompanies deleteCompany:selectedCompany];
@@ -163,27 +202,54 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.tableView.editing)
+    {
+//        if(self.creationViewController==nil){
+//            self.creationViewController = [[CreationAndEditionVC alloc]init];
+//        }
+
+        CreationAndEditionVC *vc =  [[CreationAndEditionVC alloc]init];
+        
+        Company* currCompany = [self.companyList objectAtIndex:indexPath.row];
+        
+        vc.currCompany = currCompany;
+                
+        [self.navigationController
+         pushViewController:vc
+         animated:YES];
+        
+        [vc release];
+            
+        }
+     else
+    {
     
-    if(self.productViewController==nil){
-        self.productViewController = [[ProductVC alloc]init];
-       // self.productViewController.currentCompany = [[Company alloc] init];
+    
+        if(self.productViewController==nil){
+            self.productViewController = [[ProductVC alloc]init];
+            // self.productViewController.currentCompany = [[Company alloc] init];
+        }
+        
+        
+        Company* currCompany = [self.companyList objectAtIndex:indexPath.row];
+        
+        self.productViewController.title = currCompany.companyName;
+        self.productViewController.currentCompany = currCompany;
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+
+        
+        [self.navigationController
+         pushViewController:self.productViewController
+         animated:YES];
     }
-    
-    
-    Company* currCompany = [self.companyList objectAtIndex:indexPath.row];
-    
-    self.productViewController.title = currCompany.companyName;
-    self.productViewController.currentCompany = currCompany;
-    
-    [self.navigationController
-     pushViewController:self.productViewController
-     animated:YES];
     
 }
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
     
     return YES;
 }
+
+
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
     //Manipulate your data array.
@@ -194,35 +260,8 @@
     
 }
 
--(id) initCompanyLogo
-{
-    UIImage* appleLogo = [UIImage imageNamed:@"applelogo"];
-    UIImage* samsungLogo = [UIImage imageNamed:@"samsunglogo"];
-    UIImage* blackBerryLogo = [UIImage imageNamed:@"blackberrylogo"];
-    UIImage* windowsLogo = [UIImage imageNamed:@"windowslogo"];
-
-    self.companyLogos = [[NSMutableArray alloc] init];
-    
-    [self.companyLogos addObject: appleLogo];
-    [self.companyLogos addObject: samsungLogo];
-    [self.companyLogos addObject:blackBerryLogo];
-    [self.companyLogos addObject:windowsLogo];
-    
-    return self;
-}
 
 
--(id) initCompanies
-{
-//    //self.companyList = @[@"Apple mobile devices",@"Samsung mobile devices",@"BlackBerry mobile devices",@"Windows mobile devices"];
-//    self.companyList = [NSMutableArray array];
-//    [_companyList addObject:@"Apple mobile devices"];
-//    [_companyList addObject:@"Samsung mobile devices"];
-//    [_companyList addObject:@"BlackBerry mobile devices"];
-//    [_companyList addObject:@"Windows mobile devices"];
-
-    return self;
-}
 
 
 -(void) refreshCompanyList
@@ -246,4 +285,10 @@
     [_tableView release];
     [super dealloc];
 }
+
+- (void)updateUI {
+    [_tableView reloadData];
+}
+
+
 @end

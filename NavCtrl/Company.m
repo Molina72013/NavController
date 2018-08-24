@@ -11,11 +11,13 @@
 
 @implementation Company
 
--(instancetype)initWithName: (NSString*) name andLogo:(NSString*) logo {
+-(instancetype)initWithName: (NSString*) name api:(NSString*)api andLogo:(NSString*) logo {
     if (self == [super init]) {
         self.companyName = name;
-        self.companyLogoName = logo;
+        self.companyLogoURL = logo;
+        self.companyAPI = api;
         self.companyProducts = [NSMutableArray array];
+     //   self.companyAPIValue = 0.0;
     }
     return self;
 }
@@ -24,37 +26,12 @@
 -(void)dealloc {
     
     [self.companyName release];
-    [self.companyLogoName release];
+    [self.companyLogoURL release];
     [self.companyProducts removeAllObjects];
     [self.companyProducts release];
     
     [super dealloc];
 }
-
-
-//-(void) addProducts:(NSString*)n i:(NSString*)i u:(NSString*)u
-//{
-//    Products* currAddedProdut = [[Products alloc] init];
-//
-//    currAddedProdut.productName = [NSString stringWithFormat:@"%@",n];
-//    currAddedProdut.productURL = [NSString stringWithFormat:@"%@",u];
-//    currAddedProdut.logoPicuture = [UIImage imageNamed:i];
-//
-//    if(!companyProducts)
-//    {
-//        companyProducts = [[NSMutableArray alloc] init];
-//    }
-//
-//    [companyProducts addObject:currAddedProdut];
-//
-//    [self.companysEntireInfo setObject:companyProducts forKey:@"company products"];
-//}
-
-
-
-
-
-
 
 
 

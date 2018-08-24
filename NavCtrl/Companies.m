@@ -9,6 +9,7 @@
 #import "Companies.h"
 #import "Company.h"
 #import "Products.h"
+#import "StockFetcher.h"
 
 
 static Companies* theCompany = nil;
@@ -50,6 +51,8 @@ static Companies* theCompany = nil;
     NSLog(@"The Companies DOA is initializing");
     if (self = [super init]) {
         self.companiesDataArray = [NSMutableArray array];
+        self.stockFetcher = [[StockFetcher alloc]init];
+        self.stockFetcher.companies = self;
         [self initDefaultCompanies];
 
     }
@@ -66,14 +69,14 @@ static Companies* theCompany = nil;
 
 -(void) initDefaultCompanies
 {
-    NSString* apple = @"Apple mobile devices";
-    [self addCompany:apple logo:@"applelogo"];
+    NSString* apple = @"Apple";
+    [self addCompany:apple api:@"AAPL" logo:@"applelogo"];
     [self addProductForCompany:apple prodcutName:@"iPod" logo:@"ipodicon" andURL:@"https://www.apple.com/ipod-touch/"];
     [self addProductForCompany:apple prodcutName:@"iPad" logo:@"ipadicon" andURL:@"https://www.apple.com/ipad/"];
 
     
     
-    [self addCompany:@"Samsung mobile devices" logo:@"samsunglogo"];
+    [self addCompany:@"Samsung" api:@"KRX" logo:@"samsunglogo"];
     
     
    // Company* apple = [[Company alloc]  initWith:@"Apple mobile devices" i:@"applelogo"];
@@ -96,9 +99,9 @@ static Companies* theCompany = nil;
     return arrayCopy;
 }
 
-- (void)addCompany:(NSString *)name logo:(NSString *)logo {
+- (void)addCompany:(NSString *)name api:(NSString*)api logo:(NSString *)logo {
     
-    Company *company = [[Company alloc] initWithName:name andLogo:logo];
+    Company *company = [[Company alloc] initWithName:name api:api andLogo:logo];
     [companiesDataArray addObject:company];
     
 }
@@ -198,6 +201,20 @@ static Companies* theCompany = nil;
     
     
 }
+-(void) editCompany:(Company*)editedCompany editedName:(NSString*)editedName editedLogo:(NSString*)editedLogo
+{
+    for (Company* company in companiesDataArray)
+    {
+        if (company == editedCompany)
+        {
+            company.companyName = editedName;
+            company.companyLogoURL = editedLogo;
+            break;
+        }
+    }
+    
+
+}
 
 
 -(NSArray<Products*>*)getAllProducts:(Company*)forCompany
@@ -205,4 +222,49 @@ static Companies* theCompany = nil;
     return [forCompany.companyProducts mutableCopy];
 }
 
+-(void)stockFetchSuccessWithPriceString:(NSString *)priceString forCompany:(Company*)forCompany {
+    NSLog(@"Stock price received");
+    for(Company* company in companiesDataArray)
+    {
+        if(company == forCompany)
+        {
+            company.companyAPIValue = [priceString floatValue];
+            break;
+        }
+    }
+   // NSString *dollarSignPrice = [NSString stringWithFormat:@"$%@", priceString];
+    
+    NSLog(@"%@", priceString);
+  //  return [priceString floatValue];
+   // self.text = dollarSignPrice;
+    if(self.viewControllerDelegate){
+        [self.viewControllerDelegate updateUI];
+    }
+}
+
+
+#pragma mark Optional Delegate Methods
+
+-(void)stockFetchDidFailWithError:(NSError *)error {
+    //if(error)
+   // NSLog(@"Couldn't fetch stock price, this is a description of the error:%@", error.localizedDescription);
+    //do some sort of error handling here
+}
+
+-(void)stockFetchDidStart {
+    NSLog(@"Initiating stock fetch...");
+    //could start an activity indicator here
+}
+
+
+
+
+-(void) getAllApi
+{
+    for(Company* compnay in companiesDataArray)
+    {
+        [self.stockFetcher fetchStockPriceForTicker:compnay];
+        
+    }
+}
 @end
