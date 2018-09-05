@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "Company.h"
+#import "CompnayMO+CoreDataClass.h"
+
 
 @protocol StockFetcherDelegate <NSObject>
 
--(void)stockFetchSuccessWithPriceString:(NSString *)priceString forCompany:(Company*)forCompany;
+-(void)stockFetchSuccessWithPriceString:(NSString *)priceString forCompany:(CompnayMO*)forCompany;
 
 @optional
 -(void)stockFetchDidFailWithError: (NSError*) error;

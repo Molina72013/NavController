@@ -11,18 +11,21 @@
 #import "Companies.h"
 #import "Company.h"
 #import "CreationAndEditionVC.h"
+#import "CompnayMO+CoreDataClass.h"
+//@import CoreData;
+#import "ImageFetcher.h"
+
+
+
+
 @interface CompanyVC : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) NSArray<Company*> *companyList;
+@property (nonatomic, retain) NSArray<CompnayMO*> *companyList;
 @property (nonatomic, retain) ProductVC *productViewController;
-@property (nonatomic, retain) CreationAndEditionVC* creationViewController;
+@property (retain, nonatomic) IBOutlet UIView *emptyArrayView;
 
-
-
-
-
-
-
+//FUNCTION
+- (IBAction)addButton:(id)sender;
 
 @end

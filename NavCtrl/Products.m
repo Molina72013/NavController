@@ -26,9 +26,9 @@
 
 -(void) dealloc
 {
-    [self.productName release];
-    [self.productURL release];
-    [self.productLogo release];
+    [_productName release];
+    [_productURL release];
+    [_productLogo release];
     [super dealloc];
 }
 

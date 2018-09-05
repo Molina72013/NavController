@@ -15,10 +15,10 @@
 
 //calling delegate methods during the fetching process so that the delegate can respond accordingly
 
--(void)fetchStockPriceForTicker: (Company*)forCompany {
+-(void)fetchStockPriceForTicker: (CompnayMO*)forCompany {
     
     
-    NSString* ticker = [NSString stringWithFormat:@"%@",forCompany.companyAPI];
+    NSString* ticker = [NSString stringWithFormat:@"%@",forCompany.api];
 
     //responds to selector is necessary for optional methods in our delegate protocol "StockFetcherDelegate", if our delegate does not implement them and we try to call them.. the app will crash
     

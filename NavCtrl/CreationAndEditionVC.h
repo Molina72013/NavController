@@ -8,19 +8,24 @@
 
 #import <UIKit/UIKit.h>
 #import "Company.h"
+#import "CompnayMO+CoreDataClass.h"
+#import "ImageFetcher.h"
+#import "Product+CoreDataClass.h"
+
 @interface CreationAndEditionVC : UIViewController <UITextFieldDelegate>
-@property (retain, nonatomic) IBOutlet UITextField *companyNameInput;
-@property (retain, nonatomic) IBOutlet UITextField *companyURLInput;
-@property (retain, nonatomic) IBOutlet UITextField *apiInput;
-@property (retain, nonatomic) IBOutlet Company* currCompany;
+//TEXTFIELDS
+@property (retain, nonatomic) IBOutlet UITextField *nameTextField;
+@property (retain, nonatomic) IBOutlet UITextField *iconTextField;
+@property (retain, nonatomic) IBOutlet UITextField *thirdTextField;
+@property (retain, nonatomic) IBOutlet UITextField *productPriceField;
 
-@property (retain, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (retain, nonatomic) IBOutlet NSLayoutConstraint *centercon;
-
-
+//DELETE BUTTON FUNCTIONALITY AND CONSTRAINT(for the top)
+@property (retain, nonatomic) IBOutlet UIButton *deleteButtonAppearance;
+@property (retain, nonatomic) IBOutlet NSLayoutConstraint *deleteButtonTopConstraint;
 @property (retain, nonatomic) IBOutlet UIView *theView;
-
-@property (retain, nonatomic) IBOutlet NSLayoutConstraint *topConstraint;
-
-
+@property (retain, nonatomic)  CompnayMO* currCompany;//CompanyVC
+@property (retain, nonatomic)  CompnayMO* currCompanyForProduct;//ProductVC
+@property (retain, nonatomic)  Product* currProductForCompany;//ProdcutVC
+//FUNCTIONS
+- (IBAction)deleteButton:(id)sender;
 @end

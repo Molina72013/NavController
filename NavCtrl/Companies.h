@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "StockFetcherDelegate.h"
 #import "Company.h"
-
+#import "CoreDataManager.h"
+#import "ImageFetcher.h"
+#import "Product+CoreDataProperties.h"
 @protocol UIUpdateDelegate <NSObject>
 
     -(void) updateUI;
@@ -19,28 +21,25 @@
 
 @class StockFetcher;
 @interface Companies : NSObject <StockFetcherDelegate>
-
++ (Companies*)theCompanies;
 @property (nonatomic, retain) NSMutableArray<Company*>* companiesDataArray;
 @property (strong, nonatomic) StockFetcher *stockFetcher;
-
+@property (nonatomic, retain) CoreDataManager* coreDataManager;
 @property (weak, nonatomic) id<UIUpdateDelegate> viewControllerDelegate;
 
-+ (Companies*)theCompanies;
+//RETURNING VALUE FUNCTIONS
+-(NSArray<Product*>*) getProdcutsForComp:(CompnayMO*)comp;
+-(NSArray<CompnayMO*>*)getAllCompanies;
 
--(NSArray<Company*>*)getAllCompanies;
 
+//FUNCTIONS
 -(void)addCompany: (NSString*) name api:(NSString*)api logo: (NSString*) logo;
--(void)addProductForCompany:(NSString*)companyName prodcutName:(NSString*)name logo:(NSString*)logo andURL:(NSString*)URL;
-
-
--(void) deleteProduct:(Products*)deletedProduct company:(Company*)fromCompany;
--(void) deleteCompany:(Company*)deletedCompany; //changed
--(void) moveCompany:(Company*)movingCompany toIndex:(NSUInteger)toIndex;    //changed
--(NSArray<Products*>*)getAllProducts:(Company*)forCompany;
--(void) moveProduct:(Products*)movningProduct company:(Company*)fromCompany toIndex:(NSInteger)toIndex;  //changed
--(void) editCompany:(Company*)editedCompany editedName:(NSString*)editedName editedLogo:(NSString*)editedLogo;
+-(void) deleteProduct:(Product*)deletedProduct company:(CompnayMO*)fromCompany;
+-(void) deleteCompany:(CompnayMO*)deletedCompany; //changed
+-(void) moveCompany:(CompnayMO*)movingCompany from:(NSInteger)from toIndex:(NSUInteger)toIndex;
+-(void) moveProduct:(Product*)movningProduct company:(CompnayMO*)fromCompany from:(NSInteger)from toIndex:(NSInteger)toIndex;
+-(void) editCompany:(CompnayMO*)editedCompany editedName:(NSString*)editedName editedLogo:(NSString*)editedLogo edittedApi:(NSString*)edittedApi;
 -(void) getAllApi;
-
-
-
+-(void)addProductForCompany:(CompnayMO*)company prodcutName:(NSString*)name logo:(NSString*)logo andURL:(NSString*)URL price:(float)price;
+-(void) editProduct:(Product*)product forCompany:(CompnayMO*)company withName:(NSString*)name andLogo:(NSString*)logo andURL:(NSString*)uRL price:(float)price;
 @end

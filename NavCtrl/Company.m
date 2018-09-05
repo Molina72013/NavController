@@ -12,7 +12,7 @@
 @implementation Company
 
 -(instancetype)initWithName: (NSString*) name api:(NSString*)api andLogo:(NSString*) logo {
-    if (self == [super init]) {
+    if (self = [super init]) {
         self.companyName = name;
         self.companyLogoURL = logo;
         self.companyAPI = api;
@@ -25,11 +25,11 @@
 
 -(void)dealloc {
     
-    [self.companyName release];
-    [self.companyLogoURL release];
-    [self.companyProducts removeAllObjects];
-    [self.companyProducts release];
-    
+    [_companyName release];
+    [_companyLogoURL release];
+    [_companyProducts removeAllObjects];
+    [_companyProducts release];
+    [_companyAPI release];
     [super dealloc];
 }
 

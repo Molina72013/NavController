@@ -10,11 +10,14 @@
 #import "Company.h"
 #import "Products.h"
 #import "StockFetcher.h"
+#import "CoreDataManager.h"
+#import "CompnayMO+CoreDataClass.h"
 
 
 static Companies* theCompany = nil;
 
-@implementation Companies
+@implementation Companies 
+
 @synthesize companiesDataArray;
 
 + (Companies*) theCompanies {
@@ -50,10 +53,19 @@ static Companies* theCompany = nil;
 - (id)init {
     NSLog(@"The Companies DOA is initializing");
     if (self = [super init]) {
-        self.companiesDataArray = [NSMutableArray array];
-        self.stockFetcher = [[StockFetcher alloc]init];
+        
+        StockFetcher *stockFetcher = [[StockFetcher alloc]init];
+        self.stockFetcher = stockFetcher;
+        [stockFetcher release];
+        
+        
         self.stockFetcher.companies = self;
-        [self initDefaultCompanies];
+        _coreDataManager = [[CoreDataManager alloc] init];
+
+        
+        companiesDataArray = [[NSMutableArray alloc] initWithArray:[_coreDataManager basicFetch]];
+
+//        [self initDefaultCompanies];
 
     }
     return self;
@@ -63,180 +75,89 @@ static Companies* theCompany = nil;
 
 - (void)dealloc {
     // Should never be called, but just here for clarity really.
+    [_coreDataManager release];
+    [_stockFetcher release];
+    [companiesDataArray release];
     [super dealloc];
 }
 
 
--(void) initDefaultCompanies
-{
-    NSString* apple = @"Apple";
-    [self addCompany:apple api:@"AAPL" logo:@"applelogo"];
-    [self addProductForCompany:apple prodcutName:@"iPod" logo:@"ipodicon" andURL:@"https://www.apple.com/ipod-touch/"];
-    [self addProductForCompany:apple prodcutName:@"iPad" logo:@"ipadicon" andURL:@"https://www.apple.com/ipad/"];
-
+- (NSArray<CompnayMO *> *)getAllCompanies {
     
-    
-    [self addCompany:@"Samsung" api:@"KRX" logo:@"samsunglogo"];
-    
-    
-   // Company* apple = [[Company alloc]  initWith:@"Apple mobile devices" i:@"applelogo"];
-    
-    
-//    [apple addProducts:@"iPhone" i:@"iphoneicon" u:@"https://www.apple.com/iphone/"];
-//    [apple addProducts:@"iPad" i:@"ipadicon" u:@"https://www.apple.com/ipad/"];
-//
-//    Company* samsung = [[Company alloc] initWith:@"Samsung mobile devices" i:@"samsunglogo"];
-//
-//    [samsung addProducts:@"Galaxy S" i:@"galaxysicon" u:@"https://www.samsung.com/my/smartphones/galaxy-s/"];
-//
-//    [companiesDataArray addObject:samsung];
-//    [companiesDataArray addObject:apple];
-//    return self;
+    NSArray<CompnayMO *> *arrayCopy = [_coreDataManager basicFetch];
+    return arrayCopy;
 }
 
-- (NSArray<Company *> *)getAllCompanies {
-    NSArray<Company *> *arrayCopy = [[NSArray alloc] initWithArray:companiesDataArray];
-    return arrayCopy;
+
+-(NSArray<Product*>*) getProdcutsForComp:(CompnayMO*)comp
+{
+    NSArray<Product*>* products = [_coreDataManager productBasicFetchFor:comp];
+    return products;
 }
 
 - (void)addCompany:(NSString *)name api:(NSString*)api logo:(NSString *)logo {
     
-    Company *company = [[Company alloc] initWithName:name api:api andLogo:logo];
-    [companiesDataArray addObject:company];
+    [_coreDataManager createCompanyMO:name logo:logo api:api];
     
 }
 
--(void)addProductForCompany:(NSString*)companyName prodcutName:(NSString*)name logo:(NSString*)logo andURL:(NSString*)URL   //change after datamode is set Compnay* company
+-(void)addProductForCompany:(CompnayMO*)company prodcutName:(NSString*)name logo:(NSString*)logo andURL:(NSString*)URL price:(float)price
 {
-    Products* product = [[Products alloc] initWithName:name andLogo:logo andURL:URL];
-    
-    for(Company* company in companiesDataArray)
-    {
-        if ([company.companyName isEqualToString:companyName])
-        {
-            [company.companyProducts addObject:product];
-            break;
-        }
-    }
-    
+    [_coreDataManager createProductForCompany:company withName:name andImage:logo andURL:URL price:price];
 }
 
--(void) deleteCompany:(Company*)deletedCompany   //changed
+-(void) deleteCompany:(CompnayMO*)deletedCompany   //changed
 {
-    
-    for (Company* company in companiesDataArray)
-    {
-        if(company == deletedCompany)
-        {
-            [companiesDataArray removeObject:company];
-            break;
-        }
-    }
+    [_coreDataManager deleteObject:deletedCompany];
 }
 
 
--(void) deleteProduct:(Products*)deletedProduct company:(Company*)fromCompany
+-(void) deleteProduct:(Product*)deletedProduct company:(CompnayMO*)fromCompany
 {
-
-    for(Company* company in companiesDataArray)
-    {
-        for(Products* product in company.companyProducts)
-        {
-            
-            if(company == fromCompany && product == deletedProduct)
-            {
-                [company.companyProducts removeObject:product];
-                break;
-            }
-        }
-    }
-    
-    
+    [_coreDataManager deleteProdcut:deletedProduct from:fromCompany];
 }
 
 
--(void) moveCompany:(Company*)movingCompany toIndex:(NSUInteger)toIndex     //changed
+-(void) moveCompany:(CompnayMO*)movingCompany from:(NSInteger)from toIndex:(NSUInteger)toIndex     //changed
 {
 
-    
-    for(Company* company in companiesDataArray)
-    {
-        if (company == movingCompany)
-        {
-            Company* oldCompany = company;
-          //  NSUInteger oldCompanyIndex = [companiesDataArray indexOfObject:oldCompany];
-            
-            [self.companiesDataArray removeObject:movingCompany];
-            
-            [self.companiesDataArray insertObject:oldCompany atIndex:toIndex];
-            break;
-        }
-    }
-   
+    [_coreDataManager moveCompany:movingCompany from:from to:toIndex];
 }
 
 
--(void) moveProduct:(Products*)movningProduct company:(Company*)fromCompany toIndex:(NSInteger)toIndex  //changed
+-(void) moveProduct:(Product*)movningProduct company:(CompnayMO*)fromCompany from:(NSInteger)from toIndex:(NSInteger)toIndex  //changed
 {
-    
-    for(Company* company in companiesDataArray)
-    {
-        for(Products* product in company.companyProducts)
-        {
-            if(company == fromCompany && product == movningProduct)
-            {
-           //     NSUInteger oldProuctIndex = [company.companyProducts indexOfObject:product];
-                Products* oldProduct = product;
-                
-                [company.companyProducts removeObject:product];
-                [company.companyProducts insertObject:oldProduct atIndex:toIndex];
-                
-                break;
-            }
-                
-        }
-    }
-    
-    
-    
-    
+    [_coreDataManager moveProduct:movningProduct forComp:fromCompany from:from to:toIndex];
 }
--(void) editCompany:(Company*)editedCompany editedName:(NSString*)editedName editedLogo:(NSString*)editedLogo
-{
-    for (Company* company in companiesDataArray)
-    {
-        if (company == editedCompany)
-        {
-            company.companyName = editedName;
-            company.companyLogoURL = editedLogo;
-            break;
-        }
-    }
-    
 
+-(void) editCompany:(CompnayMO*)editedCompany editedName:(NSString*)editedName editedLogo:(NSString*)editedLogo edittedApi:(NSString*)edittedApi
+{
+    [_coreDataManager editComany:editedCompany name:editedName logo:editedLogo api:edittedApi];
+}
+
+-(void) editProduct:(Product*)product forCompany:(CompnayMO*)company withName:(NSString*)name andLogo:(NSString*)logo andURL:(NSString*)uRL price:(float)price
+{
+    [_coreDataManager editProduct:product for:company withName:name imageLogo:logo andProductURL:uRL price:price];
 }
 
 
 -(NSArray<Products*>*)getAllProducts:(Company*)forCompany
 {
-    return [forCompany.companyProducts mutableCopy];
+    return [[forCompany.companyProducts mutableCopy] autorelease];
 }
 
--(void)stockFetchSuccessWithPriceString:(NSString *)priceString forCompany:(Company*)forCompany {
+-(void)stockFetchSuccessWithPriceString:(NSString *)priceString forCompany:(CompnayMO*)forCompany {
     NSLog(@"Stock price received");
-    for(Company* company in companiesDataArray)
+    for(CompnayMO* company in companiesDataArray)
     {
         if(company == forCompany)
         {
-            company.companyAPIValue = [priceString floatValue];
+            company.apiValue = [priceString floatValue];
             break;
         }
     }
-   // NSString *dollarSignPrice = [NSString stringWithFormat:@"$%@", priceString];
-    
     NSLog(@"%@", priceString);
-  //  return [priceString floatValue];
-   // self.text = dollarSignPrice;
+
     if(self.viewControllerDelegate){
         [self.viewControllerDelegate updateUI];
     }
@@ -261,10 +182,15 @@ static Companies* theCompany = nil;
 
 -(void) getAllApi
 {
-    for(Company* compnay in companiesDataArray)
+    for(CompnayMO* compnay in companiesDataArray)
     {
         [self.stockFetcher fetchStockPriceForTicker:compnay];
         
     }
 }
+
+
+
+
+
 @end

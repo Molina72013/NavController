@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CompanyVC">
             <connections>
+                <outlet property="emptyArrayView" destination="yN6-a4-eQY" id="goC-lG-Ox7"/>
                 <outlet property="tableView" destination="b9s-ce-C0v" id="jhV-HN-9fx"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -28,14 +29,62 @@
                         <outlet property="delegate" destination="-1" id="rfX-ae-JqV"/>
                     </connections>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yN6-a4-eQY">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="You currently don't hava any companies added." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ez4-yw-rkW">
+                            <rect key="frame" x="5" y="444" width="365" height="70"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="n1b-81-XNP"/>
+                            </constraints>
+                            <color key="textColor" red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stockimage" translatesAutoresizingMaskIntoConstraints="NO" id="hq5-og-17y">
+                            <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="200" id="3cw-dj-BLE"/>
+                                <constraint firstAttribute="height" constant="200" id="pkL-Ja-s0v"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koJ-Pt-bVb">
+                            <rect key="frame" x="132.5" y="524" width="110" height="30"/>
+                            <state key="normal" title="+ Add Company"/>
+                            <connections>
+                                <action selector="addButton:" destination="-1" eventType="touchUpInside" id="v9W-8k-tJ2"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="ez4-yw-rkW" firstAttribute="centerX" secondItem="yN6-a4-eQY" secondAttribute="centerX" id="4Vd-Ey-OKT"/>
+                        <constraint firstItem="hq5-og-17y" firstAttribute="centerY" secondItem="yN6-a4-eQY" secondAttribute="centerY" id="4cu-Bj-wSY"/>
+                        <constraint firstItem="koJ-Pt-bVb" firstAttribute="centerX" secondItem="yN6-a4-eQY" secondAttribute="centerX" id="Aem-gd-qPU"/>
+                        <constraint firstAttribute="trailing" secondItem="ez4-yw-rkW" secondAttribute="trailing" constant="5" id="ZlZ-l4-iRe"/>
+                        <constraint firstItem="hq5-og-17y" firstAttribute="centerX" secondItem="yN6-a4-eQY" secondAttribute="centerX" id="mMU-Kf-Tkq"/>
+                        <constraint firstItem="ez4-yw-rkW" firstAttribute="leading" secondItem="yN6-a4-eQY" secondAttribute="leading" constant="5" id="n2c-ez-PR3"/>
+                        <constraint firstItem="koJ-Pt-bVb" firstAttribute="top" secondItem="ez4-yw-rkW" secondAttribute="bottom" constant="10" id="qtf-tv-IJy"/>
+                        <constraint firstItem="ez4-yw-rkW" firstAttribute="top" secondItem="hq5-og-17y" secondAttribute="bottom" constant="10.5" id="rz8-jy-tQc"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="yN6-a4-eQY" secondAttribute="bottom" id="MrG-F7-FE4"/>
+                <constraint firstItem="yN6-a4-eQY" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Nre-5y-aRV"/>
                 <constraint firstItem="b9s-ce-C0v" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="bEQ-Zw-aaw"/>
+                <constraint firstItem="yN6-a4-eQY" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bs1-Fd-MUR"/>
                 <constraint firstAttribute="trailing" secondItem="b9s-ce-C0v" secondAttribute="trailing" id="ebp-qQ-E2j"/>
                 <constraint firstAttribute="bottom" secondItem="b9s-ce-C0v" secondAttribute="bottom" id="l6Y-x6-gSp"/>
+                <constraint firstAttribute="trailing" secondItem="yN6-a4-eQY" secondAttribute="trailing" id="qC1-Wl-hlg"/>
                 <constraint firstItem="b9s-ce-C0v" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="vPr-cD-R1S"/>
             </constraints>
+            <point key="canvasLocation" x="34.5" y="160.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="stockimage" width="981" height="954"/>
+    </resources>
 </document>

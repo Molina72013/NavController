@@ -12,11 +12,7 @@
 #import "NavControllerAppDelegate.h"
 
 @interface CreationAndEditionVC () {
-
-    int distance;
-  //  CGRect oldFrame;
     CGRect newFrame;
-    
 }
 @end
 
@@ -26,82 +22,21 @@
     [super viewDidLoad];
    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
     UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(save)];
-    
     self.navigationItem.rightBarButtonItem = saveButton;
     self.navigationItem.leftBarButtonItem = cancelButton;
-
-    
-    //making the textfield confrom the the textfielddelegates
-    self.companyNameInput.delegate = self;
-    self.companyURLInput.delegate = self;
-    self.apiInput.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
-    
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keybaordWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    // Do any additional setup after loading the view from its nib.
-
-    [self updateTextFields];
+    [self loadPlaceHoldersAndText];
+    
+    [cancelButton release];
+    [saveButton release];
 
 }
-
--(void) viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:true];
-    [self.view endEditing:true];
-
-
-
-    if(_currCompany != nil)
-    {
-        _companyNameInput.text = _currCompany.companyName;
-        _companyURLInput.text = _currCompany.companyLogoURL;
-    } else
-    {
-        _companyNameInput.text = @"";
-        _companyURLInput.text = @"";
-    }
-    
-
-    
-    
-    //[self.companyNameInput endEditing:YES];
-    
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    UIWindow *window = UIApplication.sharedApplication.keyWindow;
-    
-    NSLog(@"view y: %f", window.safeAreaInsets.top);
-    NSLog(@"view y: %f", self.navigationItem.titleView.frame.size.height);
-     NSLog(@"view y: %f", self.theView.frame.origin.y);
-}
-
--(void) updateTextFields
-{
-    _apiInput.placeholder = @"Company API";
-    _companyNameInput.placeholder = @"Name Of Company";
-    _companyURLInput.placeholder = @"Company Image for Logo URL";
-
-}
-
--(void) viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:true];
- //    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-//
-
-    
-}
-
 
 -(void) keyboardWasShown:(NSNotification *)notification
 {
 
 //    //GET THE FRAME FOR THE KEYBOARD
-
     NSValue* keyboardEndFramValue = [[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keybaordEngFrame = [keyboardEndFramValue CGRectValue];
 
@@ -143,72 +78,34 @@
 
 -(void) keybaordWillHide:(NSNotification *)notification
 {
-
-//    NSNumber *animationDurationNumber = [[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-//    NSTimeInterval animationDuration = [animationDurationNumber doubleValue];
-//
-//    NSNumber *animationCurveNumber = [[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey];
-//    UIViewAnimationCurve animationCurve = [animationCurveNumber intValue];
-//    UIViewAnimationOptions animationOptions = animationCurve << 16;
-//
-//    [UIView animateWithDuration:animationDuration
-//                          delay:0.0
-//                        options:animationOptions
-//                     animations:^{
-//
-//                     }
-//                     completion:^(BOOL finished){
-//                         [self.theView setTranslatesAutoresizingMaskIntoConstraints:false];
-//
-//                     }];
     [self.theView setTranslatesAutoresizingMaskIntoConstraints:false];
-
-    
 }
-
-
-
-//- (void) animateUp: (BOOL) up
-//{
-//    CGRect screenRect = [[UIScreen mainScreen] bounds];
-//   // CGFloat screenWidth = screenRect.size.width;
-//    CGFloat screenHeight = screenRect.size.height;
-//
-//    const int movementDistance = screenHeight / distance ; // tweak as needed
-//    const float movementDuration = 0.2f; // tweak as needed
-//
-//    int movement = (up ? -movementDistance : movementDistance);
-//
-//    [UIView beginAnimations: @"anim" context: nil];
-//    [UIView setAnimationBeginsFromCurrentState: YES];
-//    [UIView setAnimationDuration: movementDuration];
-//    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
-//    [UIView commitAnimations];
-//}
-
-
-
 
 //  Activates when keybaord pops out
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-
     newFrame = textField.frame;
-
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-
+    //nothing
 }
-
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField
 {
+////    The enter button on keyboard
+//    [textField resignFirstResponder];
+//    return true;
 
-    [textField resignFirstResponder];
-    
-    return true;
+    NSInteger nextTag = textField.tag + 1;
+    UIResponder* nextResponder = [self.view viewWithTag:nextTag];
+    if (nextResponder && textField.returnKeyType != UIReturnKeyDone) {
+        [nextResponder becomeFirstResponder];
+    } else {
+        [textField resignFirstResponder];
+    }
+    return YES;
 }
 
 
@@ -217,66 +114,160 @@
 
 -(void) cancel
 {
-    
-    
-//
     [self.view endEditing:true];
-
     [self dismissViewControllerAnimated:NO completion:nil];
-    [self.navigationController popToRootViewControllerAnimated:YES];
-
+  //  [self.navigationController popToRootViewControllerAnimated:YES];
+    if(_currCompanyForProduct){
+    [self.navigationController popToViewController:self.navigationController.viewControllers[1]   animated:YES];
+    } else
+    {
+        [self.navigationController popViewControllerAnimated:true];
+        
+    }
 }
+
+
+
 
 -(void) save
 {
-    if(_currCompany == nil)
+    if(![_nameTextField.text  isEqual: @""] && ![_iconTextField.text  isEqual: @""] && ![_thirdTextField.text  isEqual: @""])
     {
-        if(![_companyNameInput.text  isEqual: @""] && ![_companyURLInput.text  isEqual: @""])
-        {
-            [Companies.theCompanies addCompany:_companyNameInput.text api:_apiInput.text logo:_companyURLInput.text];
-            NSLog(@"Runnign this");
-            [self.view endEditing:true];
-            [self dismissViewControllerAnimated:NO completion:nil];
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        NSString* name = _nameTextField.text;
+        NSString* logo = _iconTextField.text;
+        NSString* thirdTextField = _thirdTextField.text;
+        float pricing = [_productPriceField.text floatValue];
 
-        }
-    }
-        
-    else
-    {
-        //[Companies.theCompanies addCompany:_companyNameInput.text logo:_companyURLInput.text];
-        
-        if(![_companyNameInput.text  isEqual: @""] && ![_companyURLInput.text  isEqual: @""])
+        if(_currProductForCompany && _currCompanyForProduct)
         {
-            [Companies.theCompanies editCompany:_currCompany editedName:_companyNameInput.text editedLogo:_companyURLInput.text];
-            //  NSLog(@"Nothing on name and url");
-            [self.view endEditing:true];
+            [Companies.theCompanies editProduct:_currProductForCompany forCompany:_currCompanyForProduct withName:name andLogo:logo andURL:thirdTextField price:pricing];
             [self dismissViewControllerAnimated:NO completion:nil];
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            [self.navigationController popToViewController:self.navigationController.viewControllers[1]   animated:YES];
+        } else if (_currCompanyForProduct)
+        {
+            [Companies.theCompanies addProductForCompany:_currCompanyForProduct prodcutName:name logo:logo andURL:thirdTextField price:pricing];
             
+            [self dismissViewControllerAnimated:NO completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
+        } else if (_currCompany)
+        {
+            [Companies.theCompanies editCompany:_currCompany editedName:name editedLogo:logo edittedApi:thirdTextField];
+            [self dismissViewControllerAnimated:NO completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
+        } else
+        {
+            [Companies.theCompanies addCompany:name api:thirdTextField logo:logo];
+            [self dismissViewControllerAnimated:NO completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
         }
-        
     }
 
 }
 
 
-
-
-
-- (void)dealloc {
+-(void) loadPlaceHoldersAndText
+{
+    self.nameTextField.delegate = self;
+    self.iconTextField.delegate = self;
+    self.thirdTextField.delegate = self;
+    self.productPriceField.delegate = self;
+    if(_currCompanyForProduct)
+    {
+        _thirdTextField.placeholder = @"Product URL";
+        _nameTextField.placeholder = @"Name Of Product";
+        _iconTextField.placeholder = @"Product Image URL";
+        _productPriceField.placeholder = @"Price of Product";
+    } else
+    {
+        _thirdTextField.placeholder = @"Company API";
+        _nameTextField.placeholder = @"Name Of Company";
+        _iconTextField.placeholder = @"Company Image URL";
+    }
     
-    [[ NSNotificationCenter defaultCenter ] removeObserver:self ];
-
     
-    [_companyNameInput release];
-    [_companyURLInput release];
-    [_apiInput release];
-    [_currCompany release];
-    [_scrollView release];
-    [_theView release];
-    [_topConstraint release];
-    [_centercon release];
-    [super dealloc];
+    if(_currProductForCompany && _currCompanyForProduct)
+    {
+        _nameTextField.text = _currProductForCompany.name;
+        _iconTextField.text = _currProductForCompany.image;
+        _thirdTextField.text = _currProductForCompany.prodcutURL;
+        _productPriceField.text = [NSString stringWithFormat:@"%.2f", _currProductForCompany.price];
+        
+    } else if (_currCompanyForProduct)
+    {
+        _nameTextField.text = @"";
+        _iconTextField.text = @"";
+        _thirdTextField.text = @"";
+        _productPriceField.text = @"";
+        [_deleteButtonAppearance setHidden:true];
+
+    }
+    else if (_currCompany)
+    {
+        _nameTextField.text = _currCompany.name;
+        _iconTextField.text = _currCompany.logo ;
+        _thirdTextField.text = _currCompany.api;
+        [_thirdTextField setReturnKeyType:UIReturnKeyDone];
+        _deleteButtonTopConstraint.constant = -(_thirdTextField.frame.size.height - 5);
+        [_productPriceField setHidden:TRUE];    
+
+    } else
+    {
+        _nameTextField.text = @"";
+        _iconTextField.text = @"";
+        _thirdTextField.text = @"";
+        [_thirdTextField setReturnKeyType:UIReturnKeyDone];
+        [_productPriceField setHidden:TRUE];
+        [_deleteButtonAppearance setHidden:true];
+        
+
+    }
 }
+
+- (IBAction)deleteButton:(id)sender {
+
+    if(_currProductForCompany && _currCompanyForProduct)
+    {
+        [Companies.theCompanies deleteProduct:_currProductForCompany company:_currCompanyForProduct];
+        [self.view endEditing:true];
+        [self dismissViewControllerAnimated:NO completion:nil];
+        [self.navigationController popToViewController:self.navigationController.viewControllers[1]   animated:YES];
+        
+    } else if (_currCompany)
+    {
+        [Companies.theCompanies deleteCompany: _currCompany];
+        [self.view endEditing:true];
+        [self dismissViewControllerAnimated:NO completion:nil];
+         [self.navigationController popViewControllerAnimated:true];
+    } else
+    {
+        NSLog(@"The button should of be inivisible");
+    }
+    
+    
+    
+    
+}
+
+
+
+- (void)dealloc { //double-check
+  
+    [[ NSNotificationCenter defaultCenter ] removeObserver:self ];
+   
+    
+    [_nameTextField release];
+    [_iconTextField release];
+    [_thirdTextField release];
+    [_currCompany release];
+    [_deleteButtonTopConstraint release];
+
+    [_theView release];
+    [_currProductForCompany release];
+    [_productPriceField release];
+    [_currCompanyForProduct release];
+    [_deleteButtonAppearance release];
+     [super dealloc];
+
+}
+
 @end

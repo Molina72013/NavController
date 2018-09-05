@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "StockFetcherDelegate.h"
+#import "CompnayMO+CoreDataClass.h"
 
 @interface StockFetcher : NSObject
-
--(void)fetchStockPriceForTicker: (Company*) ticker;
-
 @property (weak, nonatomic) id<StockFetcherDelegate> companies;
 
+
+//FUNCTIONS
+-(void)fetchStockPriceForTicker: (CompnayMO*) ticker;
 @end

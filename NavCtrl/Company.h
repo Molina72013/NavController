@@ -16,7 +16,6 @@
 @property (nonatomic, retain) NSString* companyLogoURL;
 @property (nonatomic, retain) NSString* companyAPI;
 @property (nonatomic) float companyAPIValue;
-
 @property (nonatomic, retain) NSMutableArray<Products *> *companyProducts;
 
 -(instancetype)initWithName: (NSString*) name api:(NSString*)api andLogo:(NSString*) logo;

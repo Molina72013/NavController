@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
+#import "CompnayMO+CoreDataClass.h"
+#import "Product+CoreDataClass.h"
 
 @interface WKWebViewVC : UIViewController
 @property (strong, nonatomic) IBOutlet WKWebView* mainWebView;
 @property (strong, nonatomic) NSString *productURL;
+@property (retain, nonatomic)  CompnayMO* wKPCompany;
+@property (retain, nonatomic)  Product* wkProdcut;
 
 
 @end

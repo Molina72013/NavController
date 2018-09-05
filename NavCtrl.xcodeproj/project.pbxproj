@@ -14,6 +14,9 @@
 		402232DB21260D6E0007D12E /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 402232DA21260D6E0007D12E /* Company.m */; };
 		402232DE21260D820007D12E /* Products.m in Sources */ = {isa = PBXBuildFile; fileRef = 402232DD21260D820007D12E /* Products.m */; };
 		402232E1212617950007D12E /* Companies.m in Sources */ = {isa = PBXBuildFile; fileRef = 402232E0212617950007D12E /* Companies.m */; };
+		402CD31D213717B9008D5EAB /* ImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 402CD31C213717B9008D5EAB /* ImageFetcher.m */; };
+		40877275213480FB00F5FA31 /* CoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40877274213480FB00F5FA31 /* CoreDataManager.m */; };
+		408772782134834200F5FA31 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 408772762134834200F5FA31 /* Model.xcdatamodeld */; };
 		40EF9757212B608700CAB90C /* CreationAndEditionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EF9755212B608700CAB90C /* CreationAndEditionVC.m */; };
 		40EF9758212B608700CAB90C /* CreationAndEditionVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40EF9756212B608700CAB90C /* CreationAndEditionVC.xib */; };
 		48A656B518163BF200746D36 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B418163BF200746D36 /* Foundation.framework */; };
@@ -60,6 +63,11 @@
 		402232DD21260D820007D12E /* Products.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Products.m; sourceTree = "<group>"; };
 		402232DF212617950007D12E /* Companies.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Companies.h; sourceTree = "<group>"; };
 		402232E0212617950007D12E /* Companies.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Companies.m; sourceTree = "<group>"; };
+		402CD31B213717B9008D5EAB /* ImageFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageFetcher.h; sourceTree = "<group>"; };
+		402CD31C213717B9008D5EAB /* ImageFetcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageFetcher.m; sourceTree = "<group>"; };
+		40877273213480FB00F5FA31 /* CoreDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataManager.h; sourceTree = "<group>"; };
+		40877274213480FB00F5FA31 /* CoreDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataManager.m; sourceTree = "<group>"; };
+		408772772134834200F5FA31 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		40EF9754212B608700CAB90C /* CreationAndEditionVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationAndEditionVC.h; sourceTree = "<group>"; };
 		40EF9755212B608700CAB90C /* CreationAndEditionVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationAndEditionVC.m; sourceTree = "<group>"; };
 		40EF9756212B608700CAB90C /* CreationAndEditionVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreationAndEditionVC.xib; sourceTree = "<group>"; };
@@ -134,7 +142,7 @@
 			name = WKWebView;
 			sourceTree = "<group>";
 		};
-		402232D821260D2F0007D12E /* Special Classes */ = {
+		402232D821260D2F0007D12E /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				402232D921260D6E0007D12E /* Company.h */,
@@ -143,8 +151,11 @@
 				402232DD21260D820007D12E /* Products.m */,
 				402232DF212617950007D12E /* Companies.h */,
 				402232E0212617950007D12E /* Companies.m */,
+				40877273213480FB00F5FA31 /* CoreDataManager.h */,
+				40877274213480FB00F5FA31 /* CoreDataManager.m */,
+				408772762134834200F5FA31 /* Model.xcdatamodeld */,
 			);
-			name = "Special Classes";
+			name = Model;
 			sourceTree = "<group>";
 		};
 		402233A8212B600C0007D12E /* CreationAndEditiingVC */ = {
@@ -155,6 +166,15 @@
 				40EF9756212B608700CAB90C /* CreationAndEditionVC.xib */,
 			);
 			name = CreationAndEditiingVC;
+			sourceTree = "<group>";
+		};
+		402CD31A21371784008D5EAB /* ImageFetching */ = {
+			isa = PBXGroup;
+			children = (
+				402CD31B213717B9008D5EAB /* ImageFetcher.h */,
+				402CD31C213717B9008D5EAB /* ImageFetcher.m */,
+			);
+			name = ImageFetching;
 			sourceTree = "<group>";
 		};
 		483796CB1BCBF7A00062D5AB /* AppDelegate */ = {
@@ -220,9 +240,10 @@
 		48A656BA18163BF200746D36 /* NavCtrl */ = {
 			isa = PBXGroup;
 			children = (
+				402CD31A21371784008D5EAB /* ImageFetching */,
 				4011F677212F4EAE00DE1CE4 /* StockFethcingForAPI */,
 				402233A8212B600C0007D12E /* CreationAndEditiingVC */,
-				402232D821260D2F0007D12E /* Special Classes */,
+				402232D821260D2F0007D12E /* Model */,
 				402232D021249CCB0007D12E /* WKWebView */,
 				483796CB1BCBF7A00062D5AB /* AppDelegate */,
 				483796CC1BCBF7C70062D5AB /* ParentViewController */,
@@ -372,10 +393,13 @@
 				402232DB21260D6E0007D12E /* Company.m in Sources */,
 				48A656C518163BF200746D36 /* NavControllerAppDelegate.m in Sources */,
 				402232E1212617950007D12E /* Companies.m in Sources */,
+				402CD31D213717B9008D5EAB /* ImageFetcher.m in Sources */,
+				40877275213480FB00F5FA31 /* CoreDataManager.m in Sources */,
 				48A656C118163BF200746D36 /* main.m in Sources */,
 				402232D321249CE90007D12E /* WKWebViewVC.m in Sources */,
 				4011F67B212F4ECE00DE1CE4 /* StockFetcher.m in Sources */,
 				9E62FF261E4A33F1002D55B8 /* ProductVC.m in Sources */,
+				408772782134834200F5FA31 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,6 +647,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		408772762134834200F5FA31 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				408772772134834200F5FA31 /* Model.xcdatamodel */,
+			);
+			currentVersion = 408772772134834200F5FA31 /* Model.xcdatamodel */;
+			name = Model.xcdatamodeld;
+			path = ../Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 48A656A918163BF200746D36 /* Project object */;
 }
